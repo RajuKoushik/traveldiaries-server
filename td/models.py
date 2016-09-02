@@ -41,12 +41,16 @@ class Post(models.Model):
         return self.post_title
 
 class TravelConnection(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
-    loc_id = models.ForeignKey(TravelDiary, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User)
+    post_id = models.ForeignKey(Post)
+    loc_id = models.ForeignKey(TravelDiary)
 
     def __str__(self):
         return self.user_id
+
+class Follows(models.Model):
+    user_id_one = models.ForeignKey(User, related_name="who")
+    user_id_two = models.ForeignKey(User, related_name="whom")
 
 
 
