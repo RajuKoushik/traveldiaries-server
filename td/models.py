@@ -4,7 +4,6 @@ import datetime
 
 
 class User(models.Model):
-    user_id = models.IntegerField()
     nick_name = models.CharField(max_length=20)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
@@ -22,16 +21,16 @@ class User(models.Model):
 
 
 class TravelDiary(models.Model):
-    loc_id = models.IntegerField()
+
     loc_name = models.CharField(max_length=30)
     loc_text = models.CharField(max_length=200)
 
 
     def __str__(self):
-        return self.choice_text
+        return self.loc_name
 
 class Post(models.Model):
-    post_id = models.IntegerField()
+
     post_title = models.CharField(max_length=30)
     post_text = models.CharField(max_length=200)
 
@@ -45,8 +44,6 @@ class TravelConnection(models.Model):
     post_id = models.ForeignKey(Post)
     loc_id = models.ForeignKey(TravelDiary)
 
-    def __str__(self):
-        return self.user_id
 
 class Follows(models.Model):
     user_id_one = models.ForeignKey(User, related_name="who")
