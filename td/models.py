@@ -27,7 +27,7 @@ class TravelDiary(models.Model):
 
 
     def __str__(self):
-        return self.loc_name
+        return self.diary_name
 
 class Post(models.Model):
 
