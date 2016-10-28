@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User,TravelDiary, Post , TravelConnection , Follows
+from .models import User,TravelDiary, Post , Follows
 
 
 # Register your models here.

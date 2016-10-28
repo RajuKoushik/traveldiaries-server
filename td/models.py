@@ -22,7 +22,7 @@ class User(models.Model):
 
 class TravelDiary(models.Model):
 
-    loc_name = models.CharField(max_length=30)
+    diary_name = models.CharField(max_length=30)
     loc_string = models.CharField(max_length=200)
 
 
@@ -34,7 +34,7 @@ class Post(models.Model):
     post_title = models.CharField(max_length=30)
     post_text = models.CharField(max_length=200)
     user_id = models.ForeignKey(User)
-    loc_id = models.ForeignKey(TravelDiary)
+    diary_id = models.ForeignKey(TravelDiary)
     post_votes = models.IntegerField()
 
     def __str__(self):
