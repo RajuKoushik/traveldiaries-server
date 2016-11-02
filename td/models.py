@@ -48,7 +48,8 @@ class Post(models.Model):
 class Follows(models.Model):
 
     def __str__(self):
-        return self.user_one - self.user_two
+        return str(self.user_one) +'-' + str(self.user_two)
+
     user_one = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,  related_name="who")
     user_two = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,  related_name="whom")
 
