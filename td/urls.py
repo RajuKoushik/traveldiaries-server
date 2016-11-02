@@ -4,5 +4,7 @@ from . import views
 
 urlpatterns = [
     url(r'^login/', rest_views.obtain_auth_token),
-    url(r'^signup/?', views.post_sign_up)
+    url(r'^signup/?', views.post_sign_up),
+    url(r'^get/user_details', views.get_user_detail),
+
 ]
