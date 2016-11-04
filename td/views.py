@@ -16,6 +16,9 @@ from .models import Diary
 
 from . import models
 
+
+
+
 @csrf_exempt
 def post_sign_up(request):
     with transaction.atomic():
@@ -127,3 +130,4 @@ def post_post(request):
         )
     )
 
+#evry line added has its worth
