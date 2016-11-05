@@ -131,3 +131,62 @@ def post_post(request):
     )
 
 #evry line added has its worth
+
+
+def get_wall_posts(request):
+    token = request.GET.get('token', None)
+    if not token:
+        return HttpResponse("Unauthorized", status=401)
+
+    token = Token.objects.filter(key=token)
+
+    if len(token) == 0:
+        return HttpResponse("Unauthorized", status=401)
+
+    user = token[0].user
+
+    followers = models.Follows.objects.values('user_two_id').filter(user_one=user)
+
+
+
+
+
+
+
+    posty = models.Post.objects.filter(user=user)
+
+    ret_list = []
+
+    for follower in followers:
+
+        curr_dict = {
+            'follower_name': follower.user_two.name,
+
+        }
+
+        sub_posts = models.Post.objects.filter(user=follower.user_two)
+
+        post_list = []
+        for post_item in sub_posts:
+            post_list.append(
+                {
+                    'post_name': post_item.post_title,
+                    'post_title':post_item.post_text,
+                    'post_votes':post_item.post_votes,
+                    'post_diary':post_item.diary.diary_name,
+
+
+                }
+            )
+
+        curr_dict['items'] = item_list
+
+        ret_list.append(curr_dict)
+
+    return HttpResponse(
+        json.dumps(
+            {
+                'subscriptions': ret_list
+            }
+        )
+    )
