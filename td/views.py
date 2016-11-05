@@ -116,9 +116,9 @@ def post_post(request):
 
     with transaction.atomic():
         posty = models.Post()
-        posty.number_of_items = request_dict['post_title']
-        posty.user = user
         posty.post_title = request_dict['post_title']
+        posty.user = user
+        posty.post_text = request_dict['post_text']
         posty.diary = Diary.objects.get(diary_name=request_dict['diary_name'])
         posty.save()
 
@@ -147,12 +147,6 @@ def get_wall_posts(request):
 
     followers = models.Follows.objects.values('user_two_id').filter(user_one=user)
 
-
-
-
-
-
-
     posty = models.Post.objects.filter(user=user)
 
     ret_list = []
@@ -179,14 +173,56 @@ def get_wall_posts(request):
                 }
             )
 
-        curr_dict['items'] = item_list
+        curr_dict['posts'] = post_list
 
         ret_list.append(curr_dict)
 
     return HttpResponse(
         json.dumps(
             {
-                'subscriptions': ret_list
+                'wall': ret_list
+            }
+        )
+    )
+
+
+@csrf_exempt
+def post_diary(request):
+    print(request.body)
+    request_dict = json.loads(request.body.decode('utf-8'))
+
+    try:
+        token = request_dict['token']
+    except Exception:
+        token = None
+
+    if not token:
+        print("No Token found in POST")
+        return HttpResponse("Unauthorized", status=401)
+
+    token = Token.objects.filter(key=token)
+
+    if len(token) == 0:
+        return HttpResponse("Unauthorized", status=401)
+
+    user = token[0].user
+    diaries = Diary.objects.all()
+
+
+
+    with transaction.atomic():
+        diary = models.Diary()
+        diary.diary_name = request_dict['diary_name']
+        diary.diary_string = request_dict['diary_string']
+        diary.diary_brief = request_dict['diary_brief']
+
+
+        diary.save()
+
+    return HttpResponse(
+        json.dumps(
+            {
+                'status': 'success'
             }
         )
     )
