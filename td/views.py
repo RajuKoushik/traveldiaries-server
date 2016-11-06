@@ -311,14 +311,14 @@ def follow(request):
 
     token = Token.objects.filter(key=token)
 
-    name = request.GET.get('name', None)
+    followee_name = request.GET.get('followee_name', None)
 
     if len(token) == 0:
         return HttpResponse("Unauthorized", status=401)
 
     user = token[0].user
 
-    follow_user = User.objects.get(username=name)
+    follow_user = User.objects.get(username=followee_name)
 
     with transaction.atomic():
         followy = models.Follows()
@@ -334,3 +334,31 @@ def follow(request):
         )
     )
 
+
+def get_profile(request):
+    token = request.GET.get('token', None)
+    if not token:
+        return HttpResponse("Unauthorized", status=401)
+
+    token = Token.objects.filter(key=token)
+
+    if len(token) == 0:
+        return HttpResponse("Unauthorized", status=401)
+
+    user = token[0].user
+
+    name = request.GET.get('name', None)
+
+    target_user = User.objects.get(username=name)
+
+    return HttpResponse(
+        json.dumps(
+            {
+                'first_name': target_user.first_name,
+                'last_name': target_user.last_name,
+                'username': target_user.username,
+
+
+            }
+        )
+    )
