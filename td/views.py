@@ -7,16 +7,11 @@ import json
 from django.db import transaction
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, timedelta
-
 from django.http import HttpResponse
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-
 from .models import Diary
-
 from . import models
-
-
 
 
 @csrf_exempt
@@ -130,8 +125,6 @@ def post_post(request):
         )
     )
 
-#evry line added has its worth
-
 
 def get_wall_posts(request):
     token = request.GET.get('token', None)
@@ -208,8 +201,6 @@ def post_diary(request):
     user = token[0].user
     diaries = Diary.objects.all()
 
-
-
     with transaction.atomic():
         diary = models.Diary()
         diary.diary_name = request_dict['diary_name']
@@ -226,3 +217,88 @@ def post_diary(request):
             }
         )
     )
+
+
+def get_diary_posts(request):
+    token = request.GET.get('token', None)
+    if not token:
+        return HttpResponse("Unauthorized", status=401)
+
+    token = Token.objects.filter(key=token)
+
+    if len(token) == 0:
+        return HttpResponse("Unauthorized", status=401)
+
+    user = token[0].user
+
+    followers = models.Follows.objects.values('user_two_id').filter(user_one=user)
+
+    posty = models.Post.objects.filter(user=user)
+
+    ret_list = []
+
+    for follower in followers:
+
+        curr_dict = {
+            'follower_name': follower.user_two.name,
+
+        }
+
+        sub_posts = models.Post.objects.filter(user=follower.user_two)
+
+        post_list = []
+        for post_item in sub_posts:
+            post_list.append(
+                {
+                    'post_name': post_item.post_title,
+                    'post_title':post_item.post_text,
+                    'post_votes':post_item.post_votes,
+                    'post_diary':post_item.diary.diary_name,
+
+
+                }
+            )
+
+        curr_dict['posts'] = post_list
+
+        ret_list.append(curr_dict)
+
+    return HttpResponse(
+        json.dumps(
+            {
+                'wall': ret_list
+            }
+        )
+    )
+
+
+def get_followers(request):
+    token = request.GET.get('token', None)
+    if not token:
+        return HttpResponse("Unauthorized", status=401)
+
+    token = Token.objects.filter(key=token)
+
+    if len(token) == 0:
+        return HttpResponse("Unauthorized", status=401)
+
+    user = token[0].user
+
+    followers = models.Follows.objects.values('user_two_id').filter(user_one=user)
+
+    posty = models.Post.objects.filter(user=user)
+
+    ret_list = []
+
+    for follower in followers:
+        ret_list.append(follower.user_two.name)
+
+    return HttpResponse(
+        json.dumps(
+            {
+                'followers': ret_list
+            }
+        )
+    )
+
+
