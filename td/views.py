@@ -148,6 +148,7 @@ def get_wall_posts(request):
 
         curr_dict = {
             'follower_name': follower.user_two.name,
+            'follower_id': User.objects.get(user=follower.user_two).id
 
         }
 
@@ -206,8 +207,6 @@ def post_diary(request):
         diary.diary_name = request_dict['diary_name']
         diary.diary_string = request_dict['diary_string']
         diary.diary_brief = request_dict['diary_brief']
-
-
         diary.save()
 
     return HttpResponse(
@@ -304,4 +303,34 @@ def get_followers(request):
         )
     )
 
+
+def follow(request):
+    token = request.GET.get('token', None)
+    if not token:
+        return HttpResponse("Unauthorized", status=401)
+
+    token = Token.objects.filter(key=token)
+
+    name = request.GET.get('name', None)
+
+    if len(token) == 0:
+        return HttpResponse("Unauthorized", status=401)
+
+    user = token[0].user
+
+    follow_user = User.objects.get(username=name)
+
+    with transaction.atomic():
+        followy = models.Follows()
+        followy.user_one = user
+        followy.user_two = follow_user
+        followy.save()
+
+    return HttpResponse(
+        json.dumps(
+            {
+                'status': 'success'
+            }
+        )
+    )
 
