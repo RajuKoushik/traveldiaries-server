@@ -284,19 +284,22 @@ def get_followers(request):
 
     user = token[0].user
 
-    followers = models.Follows.objects.values('user_two_id').filter(user_one=user)
+    followers = models.Follows.objects.values('user_two').filter(user_one=user)
 
     posty = models.Post.objects.filter(user=user)
 
     ret_list = []
+    ret_list_ids = []
 
     for follower in followers:
         ret_list.append(follower.user_two.name)
+        ret_list_ids.append(User.objects.get(user=follower.user_two).id)
 
     return HttpResponse(
         json.dumps(
             {
-                'followers': ret_list
+                'followers': ret_list,
+                'follower_id': ret_list_ids
             }
         )
     )
