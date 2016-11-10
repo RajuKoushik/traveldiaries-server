@@ -3,6 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 
 import json
+import pdb
 
 from django.db import transaction
 from django.views.decorators.csrf import csrf_exempt
@@ -22,9 +23,10 @@ def post_sign_up(request):
             password=request.POST.get('password'),
             email=request.POST.get('email')
         )
-        user.save()
+        #user.save()
         user.first_name = request.POST.get('first_name', '')
         user.last_name = request.POST.get('last_name', '')
+        user.save()
         userinfo = models.UserInfo(user=user)
         userinfo.save()
 
@@ -35,6 +37,8 @@ def post_sign_up(request):
             }
         )
     )
+
+
 
 @csrf_exempt
 def get_user_detail(request):
@@ -358,6 +362,42 @@ def get_profile(request):
                 'last_name': target_user.last_name,
                 'username': target_user.username,
 
+
+            }
+        )
+    )
+
+
+#upvote downvote
+
+def get_alldiaries(request):
+    token = request.GET.get('token', None)
+    if not token:
+        return HttpResponse("Unauthorized", status=401)
+
+    token = Token.objects.filter(key=token)
+
+    if len(token) == 0:
+        return HttpResponse("Unauthorized", status=401)
+
+    user = token[0].user
+    list_of_diaries = Diary.objects.all()
+
+    followers = models.Follows.objects.values('user_two').filter(user_one=user)
+
+    posty = models.Post.objects.filter(user=user)
+
+    ret_list = []
+    ret_list_ids = []
+
+    for diaries in list_of_diaries:
+        ret_list.append(diaries.diary_name)
+
+
+    return HttpResponse(
+        json.dumps(
+            {
+                'diaries': ret_list,
 
             }
         )

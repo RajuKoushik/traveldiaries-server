@@ -14,7 +14,7 @@ class UserInfo(models.Model):
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     age = models.PositiveIntegerField(default=0)
-    join_date = models.DateTimeField('Join published')
+    join_date = models.DateTimeField('Join published',default='2011-11-11 11:11')
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
