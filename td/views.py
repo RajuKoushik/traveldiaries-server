@@ -39,7 +39,7 @@ def post_sign_up(request):
     )
 
 @csrf_exempt
-def post_post(request):
+def post_experience(request):
     print(request.body)
     #request_dict = json.loads(request.body.decode('utf-8'))
 
@@ -60,8 +60,16 @@ def post_post(request):
 
     user = token[0].user
     diaries = Diary.objects.all()
+    try:
 
-    target_diary = Diary.objects.filter(diary_name = request.POST.get('diary_name', ' '))
+        target_diary = Diary.objects.get(diary_name=request.POST.get('diary_name',''))
+
+    except Exception:
+        target_diary = None
+
+    if not target_diary:
+        print("No Diary Available")
+        return HttpResponse("No diary bro", status=401)
 
     with transaction.atomic():
         posty = models.Post();
@@ -69,6 +77,8 @@ def post_post(request):
         posty.post_text = request.POST.get('post_text', '')
         posty.post_title = request.POST.get('post_title', '')
         posty.diary = target_diary
+        posty.post_img = 'dncsdc'
+        posty.post_votes = 10
         posty.save()
 
     return HttpResponse(
@@ -83,7 +93,10 @@ def post_post(request):
 
 @csrf_exempt
 def get_user_detail(request):
-    token = request.GET.get('token', None)
+    print request
+    token = request.POST.get('token', None)
+
+    print token
     if not token:
         return HttpResponse("Unauthorized", status=401)
 
@@ -103,20 +116,13 @@ def get_user_detail(request):
     else:
         info = info[0]
 
-    age = models.UserInfo.objects.filter(user=info.user)
-    if len(age) == 0:
-        weight = None
-    else:
-        weight = age[0].weight
-
     return HttpResponse(
         json.dumps(
             {
                 'first_name': user.first_name,
                 'last_name': user.last_name,
                 'username': user.username,
-                'age': age,
-                'doj': str(info.join_date),
+
             }
         )
     )
@@ -204,6 +210,7 @@ def post_diary(request):
         diary.diary_name = request.POST.get('diary_name', '')
         diary.diary_string = request.POST.get('diary_string', '')
         diary.diary_brief = request.POST.get('diary_brief', '')
+
         diary.save()
 
     return HttpResponse(
@@ -363,9 +370,9 @@ def get_profile(request):
 
 #upvote downvote
 
-
+@csrf_exempt
 def get_alldiaries(request):
-    token = request.GET.get('token', None)
+    token = request.POST.get('token', None)
     if not token:
         return HttpResponse("Unauthorized", status=401)
 
@@ -386,6 +393,8 @@ def get_alldiaries(request):
 
     for diaries in list_of_diaries:
         ret_list.append(diaries.diary_name)
+
+    print ret_list[0]
 
     return HttpResponse(
         json.dumps(
