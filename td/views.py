@@ -370,6 +370,7 @@ def get_profile(request):
 
 #upvote downvote
 
+
 def get_alldiaries(request):
     token = request.GET.get('token', None)
     if not token:
@@ -392,7 +393,6 @@ def get_alldiaries(request):
 
     for diaries in list_of_diaries:
         ret_list.append(diaries.diary_name)
-
 
     return HttpResponse(
         json.dumps(
