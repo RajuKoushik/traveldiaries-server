@@ -41,9 +41,9 @@ class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     post_title = models.CharField(max_length=30)
     post_text = models.CharField(max_length=200)
-    post_img = models.CharField(max_length=1000)
+    post_img = models.CharField(max_length=1000,null=True)
     diary = models.ForeignKey(Diary)
-    post_votes = models.IntegerField()
+    post_votes = models.IntegerField(null=True)
 
 
 class Follows(models.Model):

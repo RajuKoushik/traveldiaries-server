@@ -38,6 +38,47 @@ def post_sign_up(request):
         )
     )
 
+@csrf_exempt
+def post_post(request):
+    print(request.body)
+    #request_dict = json.loads(request.body.decode('utf-8'))
+
+    try:
+        token = request.POST.get('token',' ')
+        print(token)
+    except Exception:
+        token = None
+
+    if not token:
+        print("No Token found in POST")
+        return HttpResponse("Unauthorized", status=401)
+
+    token = Token.objects.filter(key=token)
+
+    if len(token) == 0:
+        return HttpResponse("Unauthorized", status=401)
+
+    user = token[0].user
+    diaries = Diary.objects.all()
+
+    target_diary = Diary.objects.filter(diary_name = request.POST.get('diary_name', ' '))
+
+    with transaction.atomic():
+        posty = models.Post();
+        posty.user = user
+        posty.post_text = request.POST.get('post_text', '')
+        posty.post_title = request.POST.get('post_title', '')
+        posty.diary = target_diary
+        posty.save()
+
+    return HttpResponse(
+        json.dumps(
+            {
+                'status': 'success'
+            }
+        )
+    )
+
 
 
 @csrf_exempt
@@ -79,8 +120,6 @@ def get_user_detail(request):
             }
         )
     )
-
-
 
 
 def get_wall_posts(request):
