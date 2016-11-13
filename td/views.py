@@ -206,6 +206,16 @@ def post_diary(request):
     user = token[0].user
     diaries = Diary.objects.all()
 
+    if Diary.objects.get(diary_name=request_dict['diary_name']).DoesNotExist == False:
+        return HttpResponse(
+            json.dumps(
+                {
+                    'error': 'Diary already exists'
+                }
+            ),
+            status=500
+        )
+
     with transaction.atomic():
         diary = models.Diary()
         diary.diary_name = request_dict['diary_name']
