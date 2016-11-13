@@ -81,53 +81,6 @@ def get_user_detail(request):
     )
 
 
-@csrf_exempt
-def post_post(request):
-    print(request.body)
-    request_dict = json.loads(request.body.decode('utf-8'))
-
-    try:
-        token = request_dict['token']
-    except Exception:
-        token = None
-
-    if not token:
-        print("No Token found in POST")
-        return HttpResponse("Unauthorized", status=401)
-
-    token = Token.objects.filter(key=token)
-
-    if len(token) == 0:
-        return HttpResponse("Unauthorized", status=401)
-
-    user = token[0].user
-    diaries = Diary.objects.all()
-
-    if Diary.objects.get(diary_name=request_dict['diary_name']).DoesNotExist:
-        return HttpResponse(
-            json.dumps(
-                {
-                    'error': 'Diary does not exist'
-                }
-            ),
-            status=500
-        )
-
-    with transaction.atomic():
-        posty = models.Post()
-        posty.post_title = request_dict['post_title']
-        posty.user = user
-        posty.post_text = request_dict['post_text']
-        posty.diary = Diary.objects.get(diary_name=request_dict['diary_name'])
-        posty.save()
-
-    return HttpResponse(
-        json.dumps(
-            {
-                'status': 'success'
-            }
-        )
-    )
 
 
 def get_wall_posts(request):
@@ -187,10 +140,11 @@ def get_wall_posts(request):
 @csrf_exempt
 def post_diary(request):
     print(request.body)
-    request_dict = json.loads(request.body.decode('utf-8'))
+    #request_dict = json.loads(request.body.decode('utf-8'))
 
     try:
-        token = request_dict['token']
+        token = request.POST.get('token',' ')
+        print(token)
     except Exception:
         token = None
 
@@ -206,21 +160,11 @@ def post_diary(request):
     user = token[0].user
     diaries = Diary.objects.all()
 
-    if Diary.objects.get(diary_name=request_dict['diary_name']).DoesNotExist == False:
-        return HttpResponse(
-            json.dumps(
-                {
-                    'error': 'Diary already exists'
-                }
-            ),
-            status=500
-        )
-
     with transaction.atomic():
         diary = models.Diary()
-        diary.diary_name = request_dict['diary_name']
-        diary.diary_string = request_dict['diary_string']
-        diary.diary_brief = request_dict['diary_brief']
+        diary.diary_name = request.POST.get('diary_name', '')
+        diary.diary_string = request.POST.get('diary_string', '')
+        diary.diary_brief = request.POST.get('diary_brief', '')
         diary.save()
 
     return HttpResponse(
