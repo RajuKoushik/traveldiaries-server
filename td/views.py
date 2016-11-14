@@ -128,8 +128,9 @@ def get_user_detail(request):
     )
 
 
+@csrf_exempt
 def get_wall_posts(request):
-    token = request.GET.get('token', None)
+    token = request.POST.get('token', None)
     if not token:
         return HttpResponse("Unauthorized", status=401)
 
@@ -140,43 +141,34 @@ def get_wall_posts(request):
 
     user = token[0].user
 
-    followers = models.Follows.objects.values('user_two_id').filter(user_one=user)
+    followers = models.Follows.objects.filter(user_one=user)
 
-    posty = models.Post.objects.filter(user=user)
+    ret_list_post_title = []
 
-    ret_list = []
+    ret_list_post_text = []
 
     for follower in followers:
-
-        curr_dict = {
-            'follower_name': follower.user_two.name,
-            'follower_id': User.objects.get(user=follower.user_two).id
-
-        }
+        print follower.user_two
 
         sub_posts = models.Post.objects.filter(user=follower.user_two)
+        print sub_posts
 
-        post_list = []
-        for post_item in sub_posts:
-            post_list.append(
-                {
-                    'post_name': post_item.post_title,
-                    'post_title':post_item.post_text,
-                    'post_votes':post_item.post_votes,
-                    'post_diary':post_item.diary.diary_name,
+        for j in sub_posts:
+            ret_list_post_title.append(j.post_title)
+            ret_list_post_text.append(j.post_text)
+        print ret_list_post_title
+        print ret_list_post_text
 
+    print ret_list_post_text
 
-                }
-            )
-
-        curr_dict['posts'] = post_list
-
-        ret_list.append(curr_dict)
+    print ret_list_post_title
 
     return HttpResponse(
         json.dumps(
             {
-                'wall': ret_list
+                'post_titles': ret_list_post_title,
+                'post_texts' : ret_list_post_text
+
             }
         )
     )
