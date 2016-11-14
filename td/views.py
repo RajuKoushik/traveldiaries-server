@@ -406,6 +406,16 @@ def get_alldiaries(request):
 
 @csrf_exempt
 def get_user_profile(request):
+    token = request.POST.get('token', None)
+    if not token:
+        return HttpResponse("Unauthorized", status=401)
+
+    token = Token.objects.filter(key=token)
+
+    if len(token) == 0:
+        return HttpResponse("Unauthorized", status=401)
+
+    user = token[0].user
     name = request.POST.get('name', None)
 
     name_user = User.objects.filter(username=name)
@@ -416,7 +426,7 @@ def get_user_profile(request):
             {
                 'name': name_user.get_username(),
                 'first_name': name_user.get_short_name(),
-                'last_name':name_user.get_full_name(),
+                'last_name': name_user.get_full_name(),
 
 
             }
