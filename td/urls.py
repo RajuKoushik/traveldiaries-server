@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^follow', views.follow),
     url(r'^get/profile', views.get_profile),
     url(r'^get/all_diaries', views.get_alldiaries),
+    url(r'^get/user_profile', views.get_user_profile),
 
 
 ]

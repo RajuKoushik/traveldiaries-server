@@ -143,6 +143,8 @@ def get_wall_posts(request):
 
     followers = models.Follows.objects.filter(user_one=user)
 
+    ret_list_post_username = []
+
     ret_list_post_title = []
 
     ret_list_post_text = []
@@ -156,18 +158,22 @@ def get_wall_posts(request):
         for j in sub_posts:
             ret_list_post_title.append(j.post_title)
             ret_list_post_text.append(j.post_text)
+
+            ret_list_post_username.append(j.user.get_username())
         print ret_list_post_title
         print ret_list_post_text
 
     print ret_list_post_text
 
     print ret_list_post_title
+    print ret_list_post_username
 
     return HttpResponse(
         json.dumps(
             {
                 'post_titles': ret_list_post_title,
-                'post_texts' : ret_list_post_text
+                'post_texts' : ret_list_post_text,
+                'post_usernames' : ret_list_post_username
 
             }
         )
@@ -330,7 +336,7 @@ def follow(request):
         )
     )
 
-
+@csrf_exempt
 def get_profile(request):
     token = request.GET.get('token', None)
     if not token:
@@ -392,6 +398,26 @@ def get_alldiaries(request):
         json.dumps(
             {
                 'diaries': ret_list,
+
+            }
+        )
+    )
+
+
+@csrf_exempt
+def get_user_profile(request):
+    name = request.POST.get('name', None)
+
+    name_user = User.objects.filter(username=name)
+
+    print name_user.get_username()
+    return HttpResponse(
+        json.dumps(
+            {
+                'name': name_user.get_username(),
+                'first_name': name_user.get_short_name(),
+                'last_name':name_user.get_full_name(),
+
 
             }
         )
