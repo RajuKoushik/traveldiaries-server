@@ -305,15 +305,15 @@ def get_followers(request):
         )
     )
 
-
+@csrf_exempt
 def follow(request):
-    token = request.GET.get('token', None)
+    token = request.POST.get('token', None)
     if not token:
         return HttpResponse("Unauthorized", status=401)
 
     token = Token.objects.filter(key=token)
 
-    followee_name = request.GET.get('followee_name', None)
+    followee_name = request.POST.get('followee_name', None)
 
     if len(token) == 0:
         return HttpResponse("Unauthorized", status=401)
@@ -420,13 +420,14 @@ def get_user_profile(request):
 
     name_user = User.objects.filter(username=name)
 
-    print name_user.get_username()
+    print name_user.get(username=name).first_name
     return HttpResponse(
         json.dumps(
             {
-                'name': name_user.get_username(),
-                'first_name': name_user.get_short_name(),
-                'last_name': name_user.get_full_name(),
+                'username': name_user.get(username=name).username,
+                'first_name': name_user.get(username=name).first_name,
+                'last_name': name_user.get(username=name).last_name,
+                'email':name_user.get(username=name).email,
 
 
             }
