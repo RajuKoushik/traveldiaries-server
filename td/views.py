@@ -77,7 +77,7 @@ def post_experience(request):
         posty.post_text = request.POST.get('post_text', '')
         posty.post_title = request.POST.get('post_title', '')
         posty.diary = target_diary
-        posty.post_img = 'dncsdc'
+        posty.post_img = request.POST.get('post_pic_url')
         posty.post_votes = 10
         posty.save()
 
@@ -88,7 +88,6 @@ def post_experience(request):
             }
         )
     )
-
 
 
 @csrf_exempt
@@ -149,6 +148,8 @@ def get_wall_posts(request):
 
     ret_list_post_text = []
 
+    ret_list_post_pic_url = []
+
     for follower in followers:
         print follower.user_two
 
@@ -158,6 +159,7 @@ def get_wall_posts(request):
         for j in sub_posts:
             ret_list_post_title.append(j.post_title)
             ret_list_post_text.append(j.post_text)
+            ret_list_post_pic_url.append(j.post_img)
 
             ret_list_post_username.append(j.user.get_username())
         print ret_list_post_title
@@ -172,8 +174,65 @@ def get_wall_posts(request):
         json.dumps(
             {
                 'post_titles': ret_list_post_title,
-                'post_texts' : ret_list_post_text,
-                'post_usernames' : ret_list_post_username
+                'post_texts': ret_list_post_text,
+                'post_usernames': ret_list_post_username,
+                'post_pic_url': ret_list_post_pic_url
+
+            }
+        )
+    )
+
+
+@csrf_exempt
+def get_diary_posts(request):
+    token = request.POST.get('token', None)
+    if not token:
+        return HttpResponse("Unauthorized", status=401)
+
+    token = Token.objects.filter(key=token)
+
+    if len(token) == 0:
+        return HttpResponse("Unauthorized", status=401)
+
+    user = token[0].user
+
+    diary_name_respo = request.POST.get('diary_name',None)
+
+    followers = models.Follows.objects.filter(user_one=user)
+
+    target_diary = models.Diary.objects.filter(diary_name=diary_name_respo)
+
+    postyy = models.Post.objects.filter(diary=target_diary.get(diary_name=diary_name_respo))
+
+    ret_list_post_username = []
+
+    ret_list_post_title = []
+
+    ret_list_post_text = []
+
+    ret_list_post_pic_url = []
+
+    for posty in postyy:
+        print posty.post_text
+
+        ret_list_post_username.append(posty.user.get_username())
+
+        ret_list_post_title.append(posty.post_title)
+        ret_list_post_pic_url.append(j.post_img)
+
+        ret_list_post_text.append(posty.post_text)
+
+    print ret_list_post_text
+    print ret_list_post_username
+    print ret_list_post_title
+
+    return HttpResponse(
+        json.dumps(
+            {
+                'post_titles': ret_list_post_title,
+                'post_texts': ret_list_post_text,
+                'post_usernames': ret_list_post_username,
+                'post_pic_url': ret_list_post_pic_url
 
             }
         )
@@ -220,7 +279,7 @@ def post_diary(request):
     )
 
 
-def get_diary_posts(request):
+def get_diary_postss(request):
     token = request.GET.get('token', None)
     if not token:
         return HttpResponse("Unauthorized", status=401)
