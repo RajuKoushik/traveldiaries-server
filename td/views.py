@@ -30,6 +30,7 @@ def post_sign_up(request):
         userinfo = models.UserInfo(user=user)
         userinfo.save()
 
+
     return HttpResponse(
         json.dumps(
             {
@@ -218,20 +219,21 @@ def get_diary_posts(request):
         ret_list_post_username.append(posty.user.get_username())
 
         ret_list_post_title.append(posty.post_title)
-        ret_list_post_pic_url.append(j.post_img)
+        ret_list_post_pic_url.append(posty.post_img)
 
         ret_list_post_text.append(posty.post_text)
 
     print ret_list_post_text
     print ret_list_post_username
     print ret_list_post_title
+    print ret_list_post_pic_url
 
     return HttpResponse(
         json.dumps(
             {
                 'post_titles': ret_list_post_title,
                 'post_texts': ret_list_post_text,
-                'post_usernames': ret_list_post_username,
+                'post_usernames' : ret_list_post_username,
                 'post_pic_url': ret_list_post_pic_url
 
             }
