@@ -494,3 +494,38 @@ def get_user_profile(request):
             }
         )
     )
+
+
+def upvote(request):
+    token = request.POST.get('token', None)
+    if not token:
+        return HttpResponse("Unauthorized", status=401)
+
+    token = Token.objects.filter(key=token)
+
+    if len(token) == 0:
+        return HttpResponse("Unauthorized", status=401)
+
+    user = token[0].user
+
+    post_namey = request.POST.get('post_name', None)
+
+    target_post = models.Post.objects.get(post_name=post_namey)
+
+    traget_post_votes = target_post.post_votes
+
+    with transaction.atomic():
+        posty = models.Post()
+        posty.post_votes = traget_post_votes + 1
+
+        posty.save()
+
+    return HttpResponse(
+        json.dumps(
+            {
+                'status': 'success',
+
+
+            }
+        )
+    )
