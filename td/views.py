@@ -542,6 +542,7 @@ def downvote(request):
         return HttpResponse("Unauthorized", status=401)
 
     user = token[0].user
+    
 
     post_namey = request.POST.get('post_name', None)
 
