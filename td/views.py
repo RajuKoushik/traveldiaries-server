@@ -538,6 +538,7 @@ def downvote(request):
 
     token = Token.objects.filter(key=token)
 
+
     if len(token) == 0:
         return HttpResponse("Unauthorized", status=401)
 
