@@ -16,6 +16,7 @@
    * Number (for authentication related)
    * Kind of places love to visit
    * Current location
+   * User Travel Histroy (the places the user has been to)
 
 * User calendar log : 
    * Current_Status
@@ -39,8 +40,6 @@
 * Matching on the basis of places love to visit
 
 * Diary
-    * Dname
-    * Diary text
     * Diary Destination
     * tag(Relevant things)
     
