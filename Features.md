@@ -19,8 +19,8 @@
    * User Travel Histroy (the places the user has been to)
 
 * User calendar log : 
-   * Current_Status
-   * Current_Date
+   * Status
+   * Date
    * reminder of journey(gives a reminder on and before jourey date)
    * color(indicating red for busy, green for free and so on)
    
