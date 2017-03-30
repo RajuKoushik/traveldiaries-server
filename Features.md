@@ -16,6 +16,7 @@
    * NUmber (for authentication related)
    * Kind of places love to visit
    * Current location
+   * User Travel Histroy (the places the user has been to)
 * User calendar log : 
    * Wheter the status of user is free or not on a particular date
 * User tarveling log : 
