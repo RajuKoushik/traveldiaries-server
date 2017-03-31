@@ -1,11 +1,10 @@
 # List of features that is already in the Travel Diaries Application
 
-* Follow other persons
-* See the popst of others
+* Follow other people
+* View posts
 * Upvote Downvote on posts
-* Post infornation
+* Post information
  
-
 # List of proposed features need to implement the Travel Diaries Application.
 
 * Connecting firebase UID with the rest api
@@ -31,6 +30,7 @@
   * Number of mates/friends
   * Need a group to visit
   * Invites to be sent (finds friends to sent the Invite)
+
 
 * Invite table :
    * User-one
