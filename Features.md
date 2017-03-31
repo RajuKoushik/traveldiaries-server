@@ -1,11 +1,10 @@
 # List of features that is already in the Travel Diaries Application
 
-* Follow other persons
-* See the popst of others
+* Follow other people
+* View posts
 * Upvote Downvote on posts
-* Post infornation
+* Post information
  
-
 # List of proposed features need to implement the Travel Diaries Application.
 
 * Connecting firebase UID with the rest api
@@ -13,12 +12,12 @@
    * Profile Photo
    * Email (for authentication related)
    * Hobbies
-   * NUmber (for authentication related)
+   * Number (for authentication related)
    * Kind of places love to visit
    * Current location
    * User Travel Histroy (the places the user has been to)
 * User calendar log : 
-   * Wheter the status of user is free or not on a particular date
+   * Availability status of a user on a particular date
 * User tarveling log : 
    * If going out :
       * Place going to visit
