@@ -1,11 +1,10 @@
 # List of features that is already in the Travel Diaries Application
 
-* Follow other persons
-* See the popst of others
+* Follow other people
+* View posts
 * Upvote Downvote on posts
-* Post infornation
+* Post information
  
-
 # List of proposed features need to implement the Travel Diaries Application.
 
 * Connecting firebase UID with the rest api
@@ -13,23 +12,46 @@
    * Profile Photo
    * Email (for authentication related)
    * Hobbies
-   * NUmber (for authentication related)
+   * Number (for authentication related)
    * Kind of places love to visit
    * Current location
+   * User Travel Histroy (the places the user has been to)
+
 * User calendar log : 
-   * Wheter the status of user is free or not on a particular date
-* User tarveling log : 
-   * If going out :
-      * Place going to visit
-      * Is he alone or with a group
-      * Need a group to visit
-      * Invites to be sent (finds friends to sent the Invite)
+   * Status
+   * Date
+   * reminder of journey(gives a reminder on and before jourey date)
+   * color(indicating red for busy, green for free and so on)
+   
+* Planning : 
+  * Date of journey
+  * Duration of journey
+  * Places to visit
+  * Number of mates/friends
+  * Need a group to visit
+  * Invites to be sent (finds friends to sent the Invite)
+
+
 * Invite table :
    * User-one
    * User-two
    * flag (Accepted or not accepted)
+
 * Matching on the basis of places love to visit
+
+* Diary
+    * Diary Destination
+    * tag(Relevant things)
+    
 * Posts :
    * Doesn't Include comments
    * Doesn't maintain the log of who liked it (may use token of the user)
    * Taging principle : Tags different things
+   
+  
+* Share
+    * Flag to present on the global wall or on local wall : 
+        * Should it be appearing on the User wall
+        * Should it be appear on the friends wall + Users wall
+        * Should it be appear on the global board + friends + users wall
+    * functions to Replicate the post and share
